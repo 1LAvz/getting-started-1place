@@ -1,4 +1,4 @@
-package org.wildfly.examples;
+package org.wildfly.examples.controller;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -7,6 +7,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.wildfly.examples.service.GettingStartedService;
 
 @Path("/")
 public class GettingStartedEndpoint {

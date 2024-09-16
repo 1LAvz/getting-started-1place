@@ -1,4 +1,4 @@
-package org.wildfly.examples;
+package org.wildfly.examples.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

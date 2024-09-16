@@ -1,4 +1,4 @@
-package org.wildfly.examples;
+package org.wildfly.examples.config;
 
 import java.util.logging.Logger;
 import jakarta.enterprise.inject.Produces;
