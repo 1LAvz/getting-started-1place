@@ -23,8 +23,8 @@ public class GettingStartedApplicationIT {
     public void testHelloEndpoint() {
         try (Client client = ClientBuilder.newClient()) {
             Response response = client
-                    .target(URI.create("http://localhost:8080/"))
-                    .path("/hello/World")
+                    .target(URI.create("http://localhost:8080/api"))
+                    .path("/World")
                     .request()
                     .get();
 
