@@ -1,4 +1,4 @@
-package org.wildfly.examples.config;
+package org.wildfly.taxirides.config;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;

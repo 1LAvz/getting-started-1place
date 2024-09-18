@@ -1,4 +1,4 @@
-package org.wildfly.examples.config;
+package org.wildfly.taxirides.config;
 
 import java.util.logging.Logger;
 import jakarta.enterprise.inject.Produces;

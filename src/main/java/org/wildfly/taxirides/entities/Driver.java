@@ -1,15 +1,18 @@
-package org.wildfly.examples.model;
+package org.wildfly.taxirides.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +20,10 @@ import java.util.List;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Passenger {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -25,15 +31,12 @@ public class Passenger {
 
     @NotBlank
     @Size(max = 100)
-    private String firstName;
+    private String name;
 
     @NotBlank
-    @Size(max = 100)
-    private String lastName;
+    @Size(max = 10)
+    private String licenceNumber;
 
-    @NotNull
-    private int age;
-
-    @ManyToMany(mappedBy = "passengers")
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaxiRide> taxiRides = new ArrayList<>();
 }

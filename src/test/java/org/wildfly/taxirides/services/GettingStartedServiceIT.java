@@ -1,4 +1,4 @@
-package org.wildfly.examples.service;
+package org.wildfly.taxirides.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
