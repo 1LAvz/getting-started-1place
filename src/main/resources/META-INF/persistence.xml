@@ -10,9 +10,9 @@
       <!-- The datasource is deployed as WEB-INF/hibernate-quickstart-ds.xml, you
          can find it in the source at src/main/webapp/WEB-INF/hibernate-quickstart-ds.xml -->
       <jta-data-source>java:jboss/datasources/HibernateQuickstartDS</jta-data-source>
-      <class>org.wildfly.taxirides.entities.Driver</class>
-      <class>org.wildfly.taxirides.entities.Passenger</class>
-      <class>org.wildfly.taxirides.entities.TaxiRide</class>
+      <class>org.wildfly.taxirides.domain.entity.Driver</class>
+      <class>org.wildfly.taxirides.domain.entity.Passenger</class>
+      <class>org.wildfly.taxirides.domain.entity.TaxiRide</class>
       <properties>
          <!-- Properties for Hibernate -->
          <property name="hibernate.hbm2ddl.auto" value="create-drop" />

@@ -47,6 +47,9 @@
         <version.failsafe.plugin>3.2.5</version.failsafe.plugin>
         <version.war.plugin>3.4.0</version.war.plugin>
         <version.lombok>1.18.28</version.lombok>
+        <version.slf4j>1.7.36</version.slf4j>
+        <version.logback>1.2.11</version.logback>
+
 
         <!-- maven-compiler-plugin -->
         <maven.compiler.release>11</maven.compiler.release>
@@ -191,12 +194,6 @@
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${version.lombok}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- Test scope dependencies -->
         <dependency>
@@ -221,6 +218,27 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version.lombok}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+
+        <!-- Logback Implementation -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version.logback}</version>
         </dependency>
     </dependencies>
 

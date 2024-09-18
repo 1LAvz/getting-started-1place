@@ -9,6 +9,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.wildfly.taxirides.domain.service.GettingStartedService;
 
 /**
  * Run integration tests with Arquillian to be able to test CDI beans
