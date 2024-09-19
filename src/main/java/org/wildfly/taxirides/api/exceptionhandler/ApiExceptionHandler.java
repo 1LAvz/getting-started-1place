@@ -5,7 +5,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.slf4j.Logger;
-import org.wildfly.taxirides.domain.exception.CouldNotSaveDriverException;
+import org.wildfly.taxirides.domain.exception.BusinessException;
+import org.wildfly.taxirides.domain.exception.EntityNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,20 +29,19 @@ public class ApiExceptionHandler implements ExceptionMapper<Throwable> {
 
     private Response findExceptionTypeAndHandle(Throwable exception) {
         Response.Status status = getExceptionStatus(exception);
-        return  generateResponse(exception, status);
+        return generateResponse(exception, status);
     }
 
     private Response.Status getExceptionStatus(Throwable exception) {
         Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
 
-        if (exception instanceof CouldNotSaveDriverException) {
+        if (exception instanceof EntityNotFoundException) {
             status = Response.Status.NOT_FOUND;
+        } else if (exception instanceof BusinessException) {
+            status = Response.Status.BAD_REQUEST;
         }
-//        else if (exception instanceof Exception) {
-//            status = Response.Status.BAD_REQUEST;
-//        }
 
-        return  status;
+        return status;
     }
 
     public Response generateResponse(Throwable exception, Response.Status status) {

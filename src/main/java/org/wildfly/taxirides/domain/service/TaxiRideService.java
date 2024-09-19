@@ -1,13 +1,18 @@
 package org.wildfly.taxirides.domain.service;
 
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import org.wildfly.taxirides.api.dto.input.CreateTaxiRideDTO;
+import org.wildfly.taxirides.api.dto.input.TaxiRideInput;
+import org.wildfly.taxirides.api.dto.input.TaxiRideFilterInput;
+import org.wildfly.taxirides.api.dto.output.DriverOutput;
+import org.wildfly.taxirides.api.dto.output.PassengerOutput;
+import org.wildfly.taxirides.api.dto.output.TaxiRideOutput;
 import org.wildfly.taxirides.domain.entity.Driver;
 import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.entity.TaxiRide;
+import org.wildfly.taxirides.domain.exception.BusinessException;
+import org.wildfly.taxirides.domain.exception.TaxiRideNotFoundException;
 import org.wildfly.taxirides.domain.repository.intarface.DriverRepository;
 import org.wildfly.taxirides.domain.repository.intarface.PassengerRepository;
 import org.wildfly.taxirides.domain.repository.intarface.TaxiRideRepository;
@@ -17,10 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Stateless
 public class TaxiRideService {
-
-    @Inject
-    private EntityManager entityManager;
 
     @Inject
     private TaxiRideRepository taxiRideRepository;
@@ -31,12 +34,14 @@ public class TaxiRideService {
     @Inject
     private PassengerRepository passengerRepository;
 
-    @Transactional
-    public TaxiRide addTaxiRide(CreateTaxiRideDTO input) throws Exception {
-        Driver driver = driverRepository.findById(input.getDriverId());
-        if (driver == null) {
-            throw new Exception("Driver not found");
-        }
+    @Inject
+    private PassengerService passengerService;
+
+    @Inject
+    private DriverService driverService;
+
+    public TaxiRide addTaxiRide(TaxiRideInput input) {
+        Driver driver = driverService.findOrFailDriverBy(input.getDriverId());
 
         List<Passenger> passengers = findPassengers(input.getPassengerIds());
 
@@ -53,121 +58,113 @@ public class TaxiRideService {
         return taxiRideRepository.save(taxiRide);
     }
 
-    private List<Passenger> findPassengers(List<Long> passengersIds) throws Exception {
+    private List<Passenger> findPassengers(List<Long> passengersIds) {
         List<Passenger> passengers = passengerRepository.findByIds(passengersIds);
         validatePassengers(passengers, passengersIds);
 
         return passengers;
     }
 
-    public void validatePassengers(List<Passenger> passengers, List<Long> passengersIds) throws Exception {
-        if (passengers.isEmpty()) {
-            throw new Exception("At least one passenger is required");
+    public void validatePassengers(List<Passenger> foundPassengers, List<Long> inputedPassengersIds)  {
+        if (foundPassengers.isEmpty()) {
+            throw new RuntimeException("At least one passenger is required");
         }
 
-        // Extract the list of IDs that were found in the repository
-        Set<Long> foundPassengerIds = passengers.stream()
-                .map(Passenger::getId) // Assuming Passenger has a getId() method
+        Set<Long> foundPassengerIds = foundPassengers.stream()
+                .map(Passenger::getId)
                 .collect(Collectors.toSet());
 
-        // Compare input IDs with found IDs to determine if any are missing
-        Set<Long> inputPassengerIds = new HashSet<>(passengersIds); // IDs provided in the input
-        inputPassengerIds.removeAll(foundPassengerIds); // This will now only contain the missing IDs
+        Set<Long> inputPassengerIds = new HashSet<>(inputedPassengersIds);
+        inputPassengerIds.removeAll(foundPassengerIds);
 
-        // If there are any missing IDs, return an error
         if (!inputPassengerIds.isEmpty()) {
             throw new EntityNotFoundException("Passengers not found for IDs: " + inputPassengerIds);
         }
     }
 
-    @Transactional
-    public void updateTaxiRide(Long id, CreateTaxiRideDTO taxiRideDTO) throws Exception {
-        // Fetch the TaxiRide using NamedQuery
-        TaxiRide taxiRide = entityManager.createNamedQuery("TaxiRide.findById", TaxiRide.class)
-                .setParameter("id", id)
-                .getSingleResult();
+    public void updateTaxiRide(Long taxiRideId, TaxiRideInput taxiRideDTO) {
+        TaxiRide taxiRide = findOrFailTaxiRideBy(taxiRideId);
 
-        // Update fields
         taxiRide.setCost(taxiRideDTO.getCost());
         taxiRide.setDuration(taxiRideDTO.getDuration());
         taxiRide.setDate(taxiRideDTO.getDate());
 
-        // Fetch driver using JPA Criteria Query
         Driver driver = driverRepository.findById(taxiRideDTO.getDriverId());
         taxiRide.setDriver(driver);
 
-        // Fetch passengers by IDs
         List<Passenger> passengers = passengerRepository.findByIds(taxiRideDTO.getPassengerIds());
         validatePassengers(passengers, taxiRideDTO.getPassengerIds());
         taxiRide.setPassengers(passengers);
 
-        entityManager.merge(taxiRide);
+        taxiRideRepository.save(taxiRide);
     }
 
+    public void deletePassengerFromTaxiRide(Long taxiRideId, Long passengerId) {
+        TaxiRide taxiRide = findOrFailTaxiRideBy(taxiRideId);
+        Passenger passenger = passengerService.findOrFailPassengerBy(passengerId);
 
-//    public List<TaxiRide> listTaxiRidesWithCriteria(LocalDateTime startDate, LocalDateTime endDate,
-//                                                    BigDecimal minCost, BigDecimal maxCost,
-//                                                    Integer minDuration, Integer maxDuration,
-//                                                    Long driverId, Long passengerId, Integer passengerUnderAge) {
-//
-//        // Create the CriteriaBuilder and CriteriaQuery
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<TaxiRide> query = cb.createQuery(TaxiRide.class);
-//        Root<TaxiRide> taxiRide = query.from(TaxiRide.class);
-//        List<Predicate> predicates = new ArrayList<>();
-//
-//        // Filter by start date
-//        if (startDate != null) {
-//            predicates.add(cb.greaterThanOrEqualTo(taxiRide.get("date"), startDate));
-//        }
-//
-//        // Filter by end date
-//        if (endDate != null) {
-//            predicates.add(cb.lessThanOrEqualTo(taxiRide.get("date"), endDate));
-//        }
-//
-//        // Filter by minimum cost
-//        if (minCost != null) {
-//            predicates.add(cb.greaterThanOrEqualTo(taxiRide.get("cost"), minCost));
-//        }
-//
-//        // Filter by maximum cost
-//        if (maxCost != null) {
-//            predicates.add(cb.lessThanOrEqualTo(taxiRide.get("cost"), maxCost));
-//        }
-//
-//        // Filter by minimum duration
-//        if (minDuration != null) {
-//            predicates.add(cb.greaterThanOrEqualTo(taxiRide.get("duration"), minDuration));
-//        }
-//
-//        // Filter by maximum duration
-//        if (maxDuration != null) {
-//            predicates.add(cb.lessThanOrEqualTo(taxiRide.get("duration"), maxDuration));
-//        }
-//
-//        // Filter by driver
-//        if (driverId != null) {
-//            predicates.add(cb.equal(taxiRide.get("driver").get("id"), driverId));
-//        }
-//
-//        // Filter by passenger
-//        if (passengerId != null) {
-//            Join<TaxiRide, Passenger> passengers = taxiRide.join("passengers");
-//            predicates.add(cb.equal(passengers.get("id"), passengerId));
-//        }
-//
-//        // Filter by passengers under a certain age
-//        if (passengerUnderAge != null) {
-//            Join<TaxiRide, Passenger> passengers = taxiRide.join("passengers");
-//            predicates.add(cb.lessThan(passengers.get("age"), passengerUnderAge));
-//        }
-//
-//        // Apply the predicates
-//        query.where(cb.and(predicates.toArray(new Predicate[0])));
-//
-//        return entityManager.createQuery(query).getResultList();
-//    }
+        boolean isPassengerInRide = taxiRide.hasPassenger(passenger);
 
-    // Other CRUD operations...
+        if(!isPassengerInRide) {
+            throw new BusinessException(String.format("Passenger with id %d is not part of the taxi ride.", passengerId));
+        }
+
+        taxiRide.getPassengers().remove(passenger);
+        taxiRideRepository.save(taxiRide);
+    }
+
+    public void deleteTaxiRide(Long taxiRideId) {
+        TaxiRide taxiRide = findOrFailTaxiRideBy(taxiRideId);
+        taxiRideRepository.delete(taxiRide);
+    }
+
+    public TaxiRide findOrFailTaxiRideBy(Long taxiRideId) {
+        TaxiRide taxiRide = taxiRideRepository.findById(taxiRideId);
+        if (taxiRide != null) {
+            return taxiRide;
+        }
+
+        throw new TaxiRideNotFoundException(taxiRideId);
+    }
+
+    public List<TaxiRideOutput> findTaxiRides(TaxiRideFilterInput input) {
+
+        List<TaxiRide> taxiRides = taxiRideRepository.findTaxiRides(input);
+
+        return taxiRides.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private TaxiRideOutput convertToDTO(TaxiRide taxiRide) {
+        return TaxiRideOutput.builder()
+                .id(taxiRide.getId())
+                .cost(taxiRide.getCost())
+                .duration(taxiRide.getDuration())
+                .date(taxiRide.getDate())
+                .driver(convertToDriverOutput(taxiRide.getDriver()))
+                .passengers(convertToPassengerOutputList(taxiRide.getPassengers()))
+                .build();
+    }
+
+    private DriverOutput convertToDriverOutput(Driver driver) {
+        return DriverOutput.builder()
+                .id(driver.getId())
+                .name(driver.getName())
+                .licenseNumber(driver.getLicenseNumber())
+                .build();
+    }
+
+    private List<PassengerOutput> convertToPassengerOutputList(List<Passenger> passengers) {
+        return passengers.stream()
+                .map(this::convertToPassengerOutput)
+                .collect(Collectors.toList());
+    }
+
+    private PassengerOutput convertToPassengerOutput(Passenger passenger) {
+        return PassengerOutput.builder()
+                .id(passenger.getId())
+                .firstName(passenger.getFirstName())
+                .lastName(passenger.getLastName())
+                .age(passenger.getAge())
+                .build();
+    }
 }

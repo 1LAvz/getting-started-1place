@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CreateTaxiRideDTO {
+public class TaxiRideInput {
     @NotNull
     private BigDecimal cost;
 

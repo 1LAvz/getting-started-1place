@@ -2,6 +2,7 @@ package org.wildfly.taxirides.core;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.wildfly.taxirides.api.controller.DriverController;
 import org.wildfly.taxirides.api.controller.PassengerController;
 import org.wildfly.taxirides.api.controller.TaxiRideController;
@@ -20,7 +21,8 @@ public class GettingStartedApplication extends Application {
         classes.add(DriverController.class);
         classes.add(PassengerController.class);
         classes.add(TaxiRideController.class);
-        classes.add(GettingStartedApplication.class);
+        classes.add(ResteasyJackson2Provider.class);
+//        classes.add(GettingStartedApplication.class);
         // Add other resource classes here
         return classes;
     }

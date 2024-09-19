@@ -12,6 +12,4 @@ public interface PassengerRepository {
     List<Passenger> findByIds(List<Long> ids);
 
     Passenger save(Passenger passenger);
-
-    void delete(Passenger passenger);
 }

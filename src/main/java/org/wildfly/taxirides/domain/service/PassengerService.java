@@ -3,6 +3,9 @@ package org.wildfly.taxirides.domain.service;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.wildfly.taxirides.domain.entity.Passenger;
+import org.wildfly.taxirides.domain.entity.TaxiRide;
+import org.wildfly.taxirides.domain.exception.PassengerNotFoundException;
+import org.wildfly.taxirides.domain.exception.TaxiRideNotFoundException;
 import org.wildfly.taxirides.domain.repository.intarface.PassengerRepository;
 
 import java.util.List;
@@ -17,29 +20,16 @@ public class PassengerService {
         return passengerRepository.findAll();
     }
 
-    public Passenger findPassengerById(Long id) {
-        return passengerRepository.findById(id);
-    }
-
     public Passenger addPassenger(Passenger passenger) {
         return passengerRepository.save(passenger);
     }
 
-    public void deletePassenger(Long id) {
-        Passenger passenger = passengerRepository.findById(id);
+    public Passenger findOrFailPassengerBy(Long passengerId) {
+        Passenger passenger = passengerRepository.findById(passengerId);
         if (passenger != null) {
-            passengerRepository.delete(passenger);
+            return passenger;
         }
-    }
 
-    public Passenger updatePassenger(Long id, Passenger passengerDetails) {
-        Passenger passenger = passengerRepository.findById(id);
-        if (passenger != null) {
-            passenger.setFirstName(passengerDetails.getFirstName());
-            passenger.setLastName(passengerDetails.getLastName());
-            passenger.setAge(passengerDetails.getAge());
-            return passengerRepository.save(passenger);
-        }
-        return null;
+        throw new PassengerNotFoundException(passengerId);
     }
 }

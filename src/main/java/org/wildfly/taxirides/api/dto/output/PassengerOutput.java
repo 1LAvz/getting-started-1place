@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class PassengerOutputDTO {
+public class PassengerOutput {
     private Long id;
     private String firstName;
     private String lastName;

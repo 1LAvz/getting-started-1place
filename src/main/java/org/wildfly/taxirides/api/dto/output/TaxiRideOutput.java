@@ -11,11 +11,11 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class TaxiRideOutputDTO {
+public class TaxiRideOutput {
     private Long id;
     private BigDecimal cost;
     private Integer duration;
     private LocalDateTime date;
-    private SimpleDriverOutputDTO driver;
-    private List<SimplePassengerOutputDTO> passengers;
+    private DriverOutput driver;
+    private List<PassengerOutput> passengers;
 }

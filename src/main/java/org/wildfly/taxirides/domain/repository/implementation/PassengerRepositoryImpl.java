@@ -40,13 +40,4 @@ public class PassengerRepositoryImpl implements PassengerRepository {
             return entityManager.merge(passenger);
         }
     }
-
-    @Override
-    public void delete(Passenger passenger) {
-        if (entityManager.contains(passenger)) {
-            entityManager.remove(passenger);
-        } else {
-            entityManager.remove(entityManager.merge(passenger));
-        }
-    }
 }

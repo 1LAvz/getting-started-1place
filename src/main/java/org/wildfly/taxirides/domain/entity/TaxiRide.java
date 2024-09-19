@@ -1,6 +1,7 @@
 package org.wildfly.taxirides.domain.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,14 +42,18 @@ public class TaxiRide {
     @NotNull
     private LocalDateTime date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "driver_id", nullable = false)
     private Driver driver;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "taxi_ride_passenger",
             joinColumns = @JoinColumn(name = "taxi_ride_id"),
             inverseJoinColumns = @JoinColumn(name = "passenger_id"))
     private List<Passenger> passengers = new ArrayList<>();
+
+    public boolean hasPassenger(Passenger passenger) {
+        return passengers.contains(passenger);
+    }
 }

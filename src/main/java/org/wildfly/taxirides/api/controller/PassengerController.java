@@ -1,6 +1,7 @@
 package org.wildfly.taxirides.api.controller;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -9,8 +10,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.wildfly.taxirides.api.dto.input.CreatePassengerInputDTO;
-import org.wildfly.taxirides.api.dto.output.PassengerOutputDTO;
+import org.wildfly.taxirides.api.dto.input.PassengerInput;
+import org.wildfly.taxirides.api.dto.output.PassengerOutput;
 import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.service.PassengerService;
 
@@ -28,8 +29,8 @@ public class PassengerController {
     @GET
     public Response listPassengers() {
         List<Passenger> passengers = passengerService.listAllPassengers();
-        List<PassengerOutputDTO> passengerDTOs = passengers.stream()
-                .map(passenger -> PassengerOutputDTO.builder()
+        List<PassengerOutput> passengerDTOs = passengers.stream()
+                .map(passenger -> PassengerOutput.builder()
                         .id(passenger.getId())
                         .firstName(passenger.getFirstName())
                         .lastName(passenger.getLastName())
@@ -40,7 +41,8 @@ public class PassengerController {
     }
 
     @POST
-    public Response addPassenger(@Valid CreatePassengerInputDTO input) {
+    @Transactional
+    public Response addPassenger(@Valid PassengerInput input) {
         Passenger passenger = Passenger.builder()
                 .firstName(input.getFirstName())
                 .lastName(input.getLastName())
@@ -48,8 +50,16 @@ public class PassengerController {
                 .build();
 
         Passenger createdPassenger = passengerService.addPassenger(passenger);
+
+        PassengerOutput createdPassengerOutput = PassengerOutput.builder()
+                .id(createdPassenger.getId())
+                .firstName(createdPassenger.getFirstName())
+                .lastName(createdPassenger.getLastName())
+                .age(createdPassenger.getAge())
+                .build();
+
         return Response.status(Response.Status.CREATED)
-                .entity(createdPassenger)  // Include the created driver in the response body
+                .entity(createdPassengerOutput)
                 .build();
     }
 }

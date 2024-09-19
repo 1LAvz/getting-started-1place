@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class SimpleDriverOutputDTO {
+public class DriverOutput {
     private Long id;
     private String name;
+    private String licenseNumber;
 }

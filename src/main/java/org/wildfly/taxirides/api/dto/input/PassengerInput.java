@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePassengerInputDTO {
+public class PassengerInput {
     @NotBlank
     @Size(max = 100)
     private String firstName;

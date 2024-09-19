@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateDriverInputDTO {
+public class DriverInput {
     @NotBlank
     @Size(max = 10)
     private String licenceNumber;

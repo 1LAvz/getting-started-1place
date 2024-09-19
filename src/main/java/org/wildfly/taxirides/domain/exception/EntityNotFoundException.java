@@ -3,8 +3,8 @@ package org.wildfly.taxirides.domain.exception;
 import jakarta.ejb.ApplicationException;
 
 @ApplicationException
-public class CouldNotSaveDriverException extends RuntimeException {
-    public CouldNotSaveDriverException(String message) {
+public class EntityNotFoundException extends BusinessException {
+    public EntityNotFoundException(String message) {
         super(message);
     }
 }

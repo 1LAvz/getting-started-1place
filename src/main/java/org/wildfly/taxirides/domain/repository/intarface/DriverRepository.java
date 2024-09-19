@@ -10,6 +10,4 @@ public interface DriverRepository {
     List<Driver> findAll();
 
     Driver save(Driver driver);
-
-    void delete(Driver driver);
 }

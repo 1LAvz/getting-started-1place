@@ -8,7 +8,6 @@ import org.wildfly.taxirides.domain.repository.intarface.DriverRepository;
 
 import java.util.List;
 
-@Transactional
 public class DriverRepositoryImpl implements DriverRepository {
 
     @PersistenceContext
@@ -18,15 +17,6 @@ public class DriverRepositoryImpl implements DriverRepository {
     public Driver findById(Long id) {
         return entityManager.find(Driver.class, id);
     }
-
-//    public Driver findById(Long driverId) {
-//        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Driver> query = cb.createQuery(Driver.class);
-//        Root<Driver> driver = query.from(Driver.class);
-//        query.select(driver).where(cb.equal(driver.get("id"), driverId));
-//
-//        return entityManager.createQuery(query).getSingleResult();
-//    }
 
     @Override
     public List<Driver> findAll() {
@@ -40,15 +30,6 @@ public class DriverRepositoryImpl implements DriverRepository {
             return driver;
         } else {
             return entityManager.merge(driver);
-        }
-    }
-
-    @Override
-    public void delete(Driver driver) {
-        if (entityManager.contains(driver)) {
-            entityManager.remove(driver);
-        } else {
-            entityManager.remove(entityManager.merge(driver));
         }
     }
 }

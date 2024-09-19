@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class SimplePassengerOutputDTO {
+public class DriverSimpleOutput {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
 }
