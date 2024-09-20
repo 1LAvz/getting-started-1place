@@ -1,10 +1,9 @@
-package org.wildfly.taxirides.domain.repository.implementation;
+package org.wildfly.taxirides.infrastructure.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.wildfly.taxirides.domain.entity.Driver;
-import org.wildfly.taxirides.domain.repository.intarface.DriverRepository;
+import org.wildfly.taxirides.domain.repository.DriverRepository;
 
 import java.util.List;
 

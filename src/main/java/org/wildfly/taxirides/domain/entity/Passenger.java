@@ -19,10 +19,10 @@ import java.util.List;
 
 @Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,3 +43,5 @@ public class Passenger {
     @ManyToMany(mappedBy = "passengers")
     private List<TaxiRide> taxiRides = new ArrayList<>();
 }
+
+

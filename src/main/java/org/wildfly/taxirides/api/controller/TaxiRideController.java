@@ -16,14 +16,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.wildfly.taxirides.api.dto.input.TaxiRideInput;
 import org.wildfly.taxirides.api.dto.input.TaxiRideFilterInput;
-import org.wildfly.taxirides.api.dto.output.DriverOutput;
-import org.wildfly.taxirides.api.dto.output.PassengerOutput;
 import org.wildfly.taxirides.api.dto.output.TaxiRideOutput;
-import org.wildfly.taxirides.domain.entity.TaxiRide;
 import org.wildfly.taxirides.domain.service.TaxiRideService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/taxi-rides")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,57 +30,33 @@ public class TaxiRideController {
     private TaxiRideService taxiRideService;
 
     @GET
-    public Response getTaxiRides(@BeanParam TaxiRideFilterInput input) {
+    public Response getTaxiRides(@BeanParam @Valid TaxiRideFilterInput input) {
         List<TaxiRideOutput> taxiRides = taxiRideService.findTaxiRides(input);
         return Response.ok(taxiRides).build();
     }
 
     @POST
     @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addTaxiRide(@Valid TaxiRideInput input) {
-        TaxiRide createdTaxiRide = taxiRideService.addTaxiRide(input);
+    public Response addTaxiRide(@Valid TaxiRideInput taxiRideInput) {
+        TaxiRideOutput taxiRide = taxiRideService.addTaxiRide(taxiRideInput);
 
-        DriverOutput driver = DriverOutput.builder()
-                .id(createdTaxiRide.getDriver().getId())
-                .name(createdTaxiRide.getDriver().getName())
-                .licenseNumber(createdTaxiRide.getDriver().getLicenseNumber())
+        return Response.status(Response.Status.CREATED)
+                .entity(taxiRide)
                 .build();
-
-        List<PassengerOutput> passengers = createdTaxiRide.getPassengers().stream()
-                        .map(passenger -> PassengerOutput.builder()
-                                .id(passenger.getId())
-                                .firstName(passenger.getFirstName())
-                                .lastName(passenger.getLastName())
-                                .age(passenger.getAge())
-                                .build())
-                                .collect(Collectors.toList());
-
-        TaxiRideOutput taxiRide = TaxiRideOutput.builder()
-                .id(createdTaxiRide.getId())
-                .cost(createdTaxiRide.getCost())
-                .duration(createdTaxiRide.getDuration())
-                .date(createdTaxiRide.getDate())
-                .driver(driver)
-                .passengers(passengers)
-                .build();
-
-        return Response.status(Response.Status.CREATED).entity(taxiRide).build();
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("/{taxiRideId}")
     @Transactional
-    public Response updateTaxiRide(@PathParam("id") Long id, @Valid TaxiRideInput taxiRideDTO) {
-        taxiRideService.updateTaxiRide(id, taxiRideDTO);
+    public Response updateTaxiRide(@PathParam("taxiRideId") Long taxiRideId, @Valid TaxiRideInput taxiRideInput) {
+        taxiRideService.updateTaxiRide(taxiRideId, taxiRideInput);
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/{taxiRideId}")
     @Transactional
-    public Response deletePassengerFromTaxiRide(@PathParam("taxiRideId") Long taxiRideId) {
+    public Response deleteTaxiRide(@PathParam("taxiRideId") Long taxiRideId) {
         taxiRideService.deleteTaxiRide(taxiRideId);
         return Response.noContent().build();
     }

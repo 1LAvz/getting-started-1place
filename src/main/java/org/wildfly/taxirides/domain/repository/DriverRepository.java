@@ -1,4 +1,4 @@
-package org.wildfly.taxirides.domain.repository.intarface;
+package org.wildfly.taxirides.domain.repository;
 
 import org.wildfly.taxirides.domain.entity.Driver;
 import java.util.List;

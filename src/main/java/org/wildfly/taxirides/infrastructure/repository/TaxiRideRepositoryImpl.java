@@ -1,4 +1,4 @@
-package org.wildfly.taxirides.domain.repository.implementation;
+package org.wildfly.taxirides.infrastructure.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,7 +12,7 @@ import org.wildfly.taxirides.api.dto.input.TaxiRideFilterInput;
 import org.wildfly.taxirides.domain.entity.Driver;
 import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.entity.TaxiRide;
-import org.wildfly.taxirides.domain.repository.intarface.TaxiRideRepository;
+import org.wildfly.taxirides.domain.repository.TaxiRideRepository;
 
 import java.util.List;
 
@@ -56,7 +56,6 @@ public class TaxiRideRepositoryImpl implements TaxiRideRepository {
 
         Predicate criteria = cb.conjunction();
 
-        // Add your filtering logic
         if (input.getStartDate() != null) {
             criteria = cb.and(criteria, cb.greaterThanOrEqualTo(taxiRide.get("date"), input.getStartDate()));
         }

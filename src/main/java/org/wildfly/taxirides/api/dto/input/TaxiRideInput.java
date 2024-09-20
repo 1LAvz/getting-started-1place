@@ -1,6 +1,8 @@
 package org.wildfly.taxirides.api.dto.input;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
@@ -11,9 +13,11 @@ import java.util.List;
 @Setter
 public class TaxiRideInput {
     @NotNull
+    @PositiveOrZero
     private BigDecimal cost;
 
     @NotNull
+    @Positive
     private Integer duration;
 
     @NotNull

@@ -13,18 +13,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

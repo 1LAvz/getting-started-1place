@@ -13,9 +13,9 @@ import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.entity.TaxiRide;
 import org.wildfly.taxirides.domain.exception.BusinessException;
 import org.wildfly.taxirides.domain.exception.TaxiRideNotFoundException;
-import org.wildfly.taxirides.domain.repository.intarface.DriverRepository;
-import org.wildfly.taxirides.domain.repository.intarface.PassengerRepository;
-import org.wildfly.taxirides.domain.repository.intarface.TaxiRideRepository;
+import org.wildfly.taxirides.domain.repository.DriverRepository;
+import org.wildfly.taxirides.domain.repository.PassengerRepository;
+import org.wildfly.taxirides.domain.repository.TaxiRideRepository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +40,8 @@ public class TaxiRideService {
     @Inject
     private DriverService driverService;
 
-    public TaxiRide addTaxiRide(TaxiRideInput input) {
+    public TaxiRideOutput addTaxiRide(TaxiRideInput input) {
+
         Driver driver = driverService.findOrFailDriverBy(input.getDriverId());
 
         List<Passenger> passengers = findPassengers(input.getPassengerIds());
@@ -55,7 +56,34 @@ public class TaxiRideService {
         taxiRide.setDriver(driver);
         taxiRide.setPassengers(passengers);
 
-        return taxiRideRepository.save(taxiRide);
+        TaxiRide createdTaxiRide = taxiRideRepository.save(taxiRide);
+
+
+        DriverOutput driverOutput = DriverOutput.builder()
+                .id(createdTaxiRide.getDriver().getId())
+                .name(createdTaxiRide.getDriver().getName())
+                .licenseNumber(createdTaxiRide.getDriver().getLicenseNumber())
+                .build();
+
+        List<PassengerOutput> passengersOutput = createdTaxiRide.getPassengers().stream()
+                .map(passenger -> PassengerOutput.builder()
+                        .id(passenger.getId())
+                        .firstName(passenger.getFirstName())
+                        .lastName(passenger.getLastName())
+                        .age(passenger.getAge())
+                        .build())
+                .collect(Collectors.toList());
+
+        TaxiRideOutput taxiRideOutput = TaxiRideOutput.builder()
+                .id(createdTaxiRide.getId())
+                .cost(createdTaxiRide.getCost())
+                .duration(createdTaxiRide.getDuration())
+                .date(createdTaxiRide.getDate())
+                .driver(driverOutput)
+                .passengers(passengersOutput)
+                .build();
+
+        return taxiRideOutput;
     }
 
     private List<Passenger> findPassengers(List<Long> passengersIds) {

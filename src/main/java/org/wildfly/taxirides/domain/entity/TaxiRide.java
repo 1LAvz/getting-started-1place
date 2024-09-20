@@ -21,12 +21,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TaxiRide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
