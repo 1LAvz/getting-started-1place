@@ -1,19 +1,32 @@
 package org.wildfly.taxirides.api.dto.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 public class EarningsReportOutput {
+    private Long driverId;
     private String driverName;
     private BigDecimal totalEarnings;
+    private Long totalTaxiRides;
     private Double averageDuration;
-    private Long under18PassengersCount;
-    private Long totalPassengersCount;
-    private Long totalRidesCount;
+    private Long totalPassengers;
+    private Long totalPassengersUnder18;
+
+    public EarningsReportOutput(Long driverId,
+                                String driverName,
+                                BigDecimal totalEarnings,
+                                Long totalTaxiRides,
+                                Double averageDuration,
+                                Long totalPassengers) {
+        this.driverId = driverId;
+        this.driverName = driverName;
+        this.totalEarnings = totalEarnings;
+        this.totalTaxiRides = totalTaxiRides;
+        this.averageDuration = averageDuration;
+        this.totalPassengers = totalPassengers;
+    }
 }
