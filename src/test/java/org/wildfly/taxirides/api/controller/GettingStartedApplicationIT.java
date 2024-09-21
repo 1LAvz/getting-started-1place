@@ -1,4 +1,4 @@
-package org.wildfly.taxirides.controllers;
+package org.wildfly.taxirides.api.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

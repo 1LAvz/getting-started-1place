@@ -1,6 +1,6 @@
 package org.wildfly.taxirides.domain.service;
 
-import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.wildfly.taxirides.domain.converter.DriverConverter;
 import org.wildfly.taxirides.api.dto.input.DriverInput;
@@ -11,7 +11,7 @@ import org.wildfly.taxirides.domain.repository.DriverRepository;
 
 import java.util.List;
 
-@Stateless
+@ApplicationScoped
 public class DriverService {
 
     @Inject
