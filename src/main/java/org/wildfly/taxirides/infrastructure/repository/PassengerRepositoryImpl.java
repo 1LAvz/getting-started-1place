@@ -2,13 +2,11 @@ package org.wildfly.taxirides.infrastructure.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.repository.PassengerRepository;
 
 import java.util.List;
 
-@Transactional
 public class PassengerRepositoryImpl implements PassengerRepository {
 
     @PersistenceContext
@@ -21,12 +19,12 @@ public class PassengerRepositoryImpl implements PassengerRepository {
 
     @Override
     public List<Passenger> findAll() {
-        return entityManager.createQuery("SELECT p FROM Passenger p", Passenger.class).getResultList();
+        return entityManager.createNamedQuery("Passenger.findAll", Passenger.class).getResultList();
     }
 
     @Override
     public List<Passenger> findByIds(List<Long> ids) {
-        return entityManager.createQuery("SELECT p FROM Passenger p WHERE p.id IN :ids", Passenger.class)
+        return entityManager.createNamedQuery("Passenger.findByIds", Passenger.class)
                 .setParameter("ids", ids)
                 .getResultList();
     }

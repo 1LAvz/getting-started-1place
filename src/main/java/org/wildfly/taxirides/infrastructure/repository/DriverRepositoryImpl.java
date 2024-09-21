@@ -19,7 +19,7 @@ public class DriverRepositoryImpl implements DriverRepository {
 
     @Override
     public List<Driver> findAll() {
-        return entityManager.createQuery("SELECT d FROM Driver d", Driver.class).getResultList();
+        return entityManager.createNamedQuery("Driver.findAll", Driver.class).getResultList();
     }
 
     @Override

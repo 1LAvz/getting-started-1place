@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//TODO REFACT THIS METHOD FOR BETTER CLARITY AND PERFORMANCE
 public class EarningsReportServiceImpl implements EarningsReportService {
     @PersistenceContext
     private EntityManager entityManager;
