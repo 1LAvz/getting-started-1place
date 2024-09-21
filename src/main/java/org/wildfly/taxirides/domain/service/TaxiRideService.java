@@ -2,7 +2,6 @@ package org.wildfly.taxirides.domain.service;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
 import org.wildfly.taxirides.api.dto.input.TaxiRideInput;
 import org.wildfly.taxirides.api.dto.input.TaxiRideFilterInput;
 import org.wildfly.taxirides.api.dto.output.TaxiRideOutput;
@@ -11,6 +10,7 @@ import org.wildfly.taxirides.domain.entity.Driver;
 import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.entity.TaxiRide;
 import org.wildfly.taxirides.domain.exception.BusinessException;
+import org.wildfly.taxirides.domain.exception.PassengerNotFoundException;
 import org.wildfly.taxirides.domain.exception.TaxiRideNotFoundException;
 import org.wildfly.taxirides.domain.repository.DriverRepository;
 import org.wildfly.taxirides.domain.repository.PassengerRepository;
@@ -111,7 +111,7 @@ public class TaxiRideService {
 
     public void validatePassengers(List<Passenger> passengersFound, Set<Long> inputtedPassengersIds) {
         if (inputtedPassengersIds.isEmpty()) {
-            throw new RuntimeException("At least one passenger is required");
+            throw new BusinessException("At least one passenger is required");
         }
 
         checkIfAllPassengersInformedDoExists(passengersFound, inputtedPassengersIds);
@@ -126,7 +126,7 @@ public class TaxiRideService {
         inputPassengerIds.removeAll(foundPassengerIds);
 
         if (!inputPassengerIds.isEmpty()) {
-            throw new EntityNotFoundException("Passengers not found for IDs: " + inputPassengerIds);
+            throw new PassengerNotFoundException("Passengers not found for IDs: " + inputPassengerIds);
         }
     }
 }

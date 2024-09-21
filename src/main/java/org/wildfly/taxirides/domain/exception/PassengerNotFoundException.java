@@ -1,6 +1,7 @@
 package org.wildfly.taxirides.domain.exception;
 
 import jakarta.ejb.ApplicationException;
+import jakarta.persistence.EntityNotFoundException;
 
 @ApplicationException
 public class PassengerNotFoundException extends EntityNotFoundException {

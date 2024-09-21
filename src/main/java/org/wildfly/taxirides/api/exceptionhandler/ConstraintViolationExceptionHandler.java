@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Provider
-public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
+public class ConstraintViolationExceptionHandler implements ExceptionMapper<ConstraintViolationException> {
 
     @Override
     public Response toResponse(ConstraintViolationException exception) {
@@ -21,8 +21,8 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
         Map<String, String> errors = violations.stream()
                 .collect(Collectors.toMap(
-                        violation -> getSimplePropertyName(violation.getPropertyPath().toString()), // Extract readable field name
-                        ConstraintViolation::getMessage // error message
+                        violation -> getSimplePropertyName(violation.getPropertyPath().toString()),
+                        ConstraintViolation::getMessage
                 ));
 
         Map<String, Object> responseBody = new HashMap<>();

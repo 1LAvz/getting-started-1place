@@ -1,12 +1,12 @@
 package org.wildfly.taxirides.api.exceptionhandler;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 import org.wildfly.taxirides.domain.exception.BusinessException;
-import org.wildfly.taxirides.domain.exception.EntityNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class ApiExceptionHandler implements ExceptionMapper<Throwable> {
 
     private Response findExceptionTypeAndHandle(Throwable exception) {
         Response.Status status = getExceptionStatus(exception);
-        return generateResponse(exception, status);
+        return buildErrorResponse(exception, status);
     }
 
     private Response.Status getExceptionStatus(Throwable exception) {
@@ -44,13 +44,20 @@ public class ApiExceptionHandler implements ExceptionMapper<Throwable> {
         return status;
     }
 
-    public Response generateResponse(Throwable exception, Response.Status status) {
+    public Response buildErrorResponse(Throwable exception, Response.Status status) {
         Map<String, String> response = new HashMap<>();
-        response.put("message", exception.getMessage());
+        response.put("message", Response.Status.INTERNAL_SERVER_ERROR.equals(status) ? getFriendlyInternalErroMsg()
+                : exception.getMessage());
         response.put("exception", exception.getClass().getName());
+        response.put("errorCode", Integer.toString(status.getStatusCode()));
 
         return Response.status(status)
                 .entity(response)
                 .build();
+    }
+
+    private String getFriendlyInternalErroMsg() {
+        return "An unexpected internal error has occurred in the system. " +
+                "Try again and if the problem persists, contact your system administrator.";
     }
 }
