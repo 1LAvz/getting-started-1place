@@ -1,6 +1,7 @@
 package org.wildfly.taxirides.domain.service;
 
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.wildfly.taxirides.api.dto.input.TaxiRideInput;
 import org.wildfly.taxirides.api.dto.input.TaxiRideFilterInput;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Stateless
+@ApplicationScoped
 public class TaxiRideService {
 
     @Inject

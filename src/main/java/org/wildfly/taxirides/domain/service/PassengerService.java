@@ -1,6 +1,7 @@
 package org.wildfly.taxirides.domain.service;
 
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.wildfly.taxirides.api.dto.input.PassengerInput;
 import org.wildfly.taxirides.api.dto.output.PassengerOutput;
@@ -10,7 +11,7 @@ import org.wildfly.taxirides.domain.exception.PassengerNotFoundException;
 import org.wildfly.taxirides.domain.repository.PassengerRepository;
 import java.util.List;
 
-@Stateless
+@ApplicationScoped
 public class PassengerService {
 
     @Inject
