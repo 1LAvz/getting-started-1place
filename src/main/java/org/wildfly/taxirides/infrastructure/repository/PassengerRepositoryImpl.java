@@ -6,6 +6,7 @@ import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.repository.PassengerRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public class PassengerRepositoryImpl implements PassengerRepository {
 
@@ -23,7 +24,7 @@ public class PassengerRepositoryImpl implements PassengerRepository {
     }
 
     @Override
-    public List<Passenger> findByIds(List<Long> ids) {
+    public List<Passenger> findByIds(Set<Long> ids) {
         return entityManager.createNamedQuery("Passenger.findByIds", Passenger.class)
                 .setParameter("ids", ids)
                 .getResultList();

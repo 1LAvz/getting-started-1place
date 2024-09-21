@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,5 +27,5 @@ public class TaxiRideInput {
     private Long driverId;
 
     @NotNull
-    private List<Long> passengerIds;
+    private Set<Long> passengerIds;
 }

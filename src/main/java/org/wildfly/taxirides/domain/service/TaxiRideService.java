@@ -86,14 +86,14 @@ public class TaxiRideService {
         return taxiRideOutput;
     }
 
-    private List<Passenger> findPassengers(List<Long> passengersIds) {
+    private List<Passenger> findPassengers(Set<Long> passengersIds) {
         List<Passenger> passengers = passengerRepository.findByIds(passengersIds);
         validatePassengers(passengers, passengersIds);
 
         return passengers;
     }
 
-    public void validatePassengers(List<Passenger> foundPassengers, List<Long> inputedPassengersIds)  {
+    public void validatePassengers(List<Passenger> foundPassengers, Set<Long> inputedPassengersIds)  {
         if (foundPassengers.isEmpty()) {
             throw new RuntimeException("At least one passenger is required");
         }
@@ -110,21 +110,47 @@ public class TaxiRideService {
         }
     }
 
-    public void updateTaxiRide(Long taxiRideId, TaxiRideInput taxiRideDTO) {
+    public TaxiRideOutput updateTaxiRide(Long taxiRideId, TaxiRideInput taxiRideinput) {
         TaxiRide taxiRide = findOrFailTaxiRideBy(taxiRideId);
 
-        taxiRide.setCost(taxiRideDTO.getCost());
-        taxiRide.setDuration(taxiRideDTO.getDuration());
-        taxiRide.setDate(taxiRideDTO.getDate());
+        taxiRide.setCost(taxiRideinput.getCost());
+        taxiRide.setDuration(taxiRideinput.getDuration());
+        taxiRide.setDate(taxiRideinput.getDate());
 
-        Driver driver = driverRepository.findById(taxiRideDTO.getDriverId());
+        Driver driver = driverRepository.findById(taxiRideinput.getDriverId());
         taxiRide.setDriver(driver);
 
-        List<Passenger> passengers = passengerRepository.findByIds(taxiRideDTO.getPassengerIds());
-        validatePassengers(passengers, taxiRideDTO.getPassengerIds());
+        List<Passenger> passengers = passengerRepository.findByIds(taxiRideinput.getPassengerIds());
+        validatePassengers(passengers, taxiRideinput.getPassengerIds());
         taxiRide.setPassengers(passengers);
 
-        taxiRideRepository.save(taxiRide);
+        TaxiRide updatedTaxiRide = taxiRideRepository.save(taxiRide);
+
+        DriverOutput driverOutput = DriverOutput.builder()
+                .id(updatedTaxiRide.getDriver().getId())
+                .name(updatedTaxiRide.getDriver().getName())
+                .licenseNumber(updatedTaxiRide.getDriver().getLicenseNumber())
+                .build();
+
+        List<PassengerOutput> passengersOutput = updatedTaxiRide.getPassengers().stream()
+                .map(passenger -> PassengerOutput.builder()
+                        .id(passenger.getId())
+                        .firstName(passenger.getFirstName())
+                        .lastName(passenger.getLastName())
+                        .age(passenger.getAge())
+                        .build())
+                .collect(Collectors.toList());
+
+        TaxiRideOutput taxiRideOutput = TaxiRideOutput.builder()
+                .id(updatedTaxiRide.getId())
+                .cost(updatedTaxiRide.getCost())
+                .duration(updatedTaxiRide.getDuration())
+                .date(updatedTaxiRide.getDate())
+                .driver(driverOutput)
+                .passengers(passengersOutput)
+                .build();
+
+        return  taxiRideOutput;
     }
 
     public void deletePassengerFromTaxiRide(Long taxiRideId, Long passengerId) {

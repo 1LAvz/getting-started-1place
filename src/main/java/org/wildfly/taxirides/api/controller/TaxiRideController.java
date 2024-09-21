@@ -49,8 +49,10 @@ public class TaxiRideController {
     @Path("/{taxiRideId}")
     @Transactional
     public Response updateTaxiRide(@PathParam("taxiRideId") Long taxiRideId, @Valid TaxiRideInput taxiRideInput) {
-        taxiRideService.updateTaxiRide(taxiRideId, taxiRideInput);
-        return Response.ok().build();
+        TaxiRideOutput taxiRide = taxiRideService.updateTaxiRide(taxiRideId, taxiRideInput);
+        return Response.ok()
+                .entity(taxiRide)
+                .build();
     }
 
     @DELETE
