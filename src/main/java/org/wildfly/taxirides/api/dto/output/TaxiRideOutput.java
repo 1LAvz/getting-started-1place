@@ -1,6 +1,5 @@
 package org.wildfly.taxirides.api.dto.output;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
 public class TaxiRideOutput {
     private Long id;
     private BigDecimal cost;

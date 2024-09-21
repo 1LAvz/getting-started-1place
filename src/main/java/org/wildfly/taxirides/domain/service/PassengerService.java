@@ -1,52 +1,35 @@
 package org.wildfly.taxirides.domain.service;
 
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.wildfly.taxirides.api.dto.input.PassengerInput;
 import org.wildfly.taxirides.api.dto.output.PassengerOutput;
+import org.wildfly.taxirides.domain.converter.PassengerConverter;
 import org.wildfly.taxirides.domain.entity.Passenger;
 import org.wildfly.taxirides.domain.exception.PassengerNotFoundException;
 import org.wildfly.taxirides.domain.repository.PassengerRepository;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Stateless
 public class PassengerService {
 
     @Inject
     private PassengerRepository passengerRepository;
 
+    @Inject
+    private PassengerConverter passengerConverter;
+
     public List<PassengerOutput> listAllPassengers() {
         List<Passenger> passengers = passengerRepository.findAll();
 
-        List<PassengerOutput> passengerDTOs = passengers.stream()
-                .map(passenger -> PassengerOutput.builder()
-                        .id(passenger.getId())
-                        .firstName(passenger.getFirstName())
-                        .lastName(passenger.getLastName())
-                        .age(passenger.getAge())
-                        .build()
-                ).collect(Collectors.toList());
-
-        return passengerDTOs;
+        return passengerConverter.convertToDTO(passengers);
     }
 
     public PassengerOutput addPassenger(PassengerInput passengerInput) {
-        Passenger passenger = Passenger.builder()
-                .firstName(passengerInput.getFirstName())
-                .lastName(passengerInput.getLastName())
-                .age(passengerInput.getAge())
-                .build();
-
+        Passenger passenger = passengerConverter.convertToEntity(passengerInput);
         Passenger createdPassenger = passengerRepository.save(passenger);
 
-        PassengerOutput passengerOutput = PassengerOutput.builder()
-                .id(createdPassenger.getId())
-                .firstName(createdPassenger.getFirstName())
-                .lastName(createdPassenger.getLastName())
-                .age(createdPassenger.getAge())
-                .build();
-
-        return passengerOutput;
+        return passengerConverter.convertToDTO(createdPassenger);
     }
 
     public Passenger findOrFailPassengerBy(Long passengerId) {

@@ -58,4 +58,8 @@ public class TaxiRide {
     public boolean hasPassenger(Passenger passenger) {
         return passengers.contains(passenger);
     }
+
+    public boolean isPassengerTheOnlyOne(Passenger passenger) {
+        return hasPassenger(passenger) && passengers.size() == 1;
+    }
 }

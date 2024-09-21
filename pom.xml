@@ -49,6 +49,7 @@
         <version.lombok>1.18.28</version.lombok>
         <version.slf4j>1.7.36</version.slf4j>
         <version.logback>1.2.11</version.logback>
+        <version.modelmapper>3.1.0</version.modelmapper>
 
 
         <!-- maven-compiler-plugin -->
@@ -239,6 +240,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${version.logback}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${version.modelmapper}</version>
         </dependency>
     </dependencies>
 

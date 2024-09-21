@@ -10,7 +10,7 @@ import lombok.Setter;
 public class DriverInput {
     @NotBlank
     @Size(max = 10)
-    private String licenceNumber;
+    private String licenseNumber;
 
     @NotBlank
     @Size(max = 100)
