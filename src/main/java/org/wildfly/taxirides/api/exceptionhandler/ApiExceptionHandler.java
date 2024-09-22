@@ -2,6 +2,7 @@ package org.wildfly.taxirides.api.exceptionhandler;
 
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -36,6 +37,8 @@ public class ApiExceptionHandler implements ExceptionMapper<Throwable> {
         Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
 
         if (exception instanceof EntityNotFoundException) {
+            status = Response.Status.NOT_FOUND;
+        } else if (exception instanceof NotFoundException) {
             status = Response.Status.NOT_FOUND;
         } else if (exception instanceof BusinessException) {
             status = Response.Status.BAD_REQUEST;
