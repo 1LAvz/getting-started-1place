@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "e93235c7-7e4d-43f6-a346-92cfe4768a5f",
+		"name": "1place-taxiride-endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "26462777",
+		"_collection_link": "https://place7.postman.co/workspace/a7133b73-a242-4b58-8312-087b4d213c6d/collection/26462777-e93235c7-7e4d-43f6-a346-92cfe4768a5f?action=share&source=collection_link&creator=26462777"
+	},
+	"item": [
+		{
+			"name": "List drivers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/api/drivers"
+			},
+			"response": []
+		},
+		{
+			"name": "List passengers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:8080/api/passengers"
+			},
+			"response": []
+		},
+		{
+			"name": "Add driver",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Lucas Avanzi\",\n    \"licenseNumber\": \"1234567890\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/drivers"
+			},
+			"response": []
+		},
+		{
+			"name": "Add passenger",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Lucas\",\n    \"lastName\": \"Avanzi\",\n    \"age\": 13\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/passengers"
+			},
+			"response": []
+		},
+		{
+			"name": "Add taxi ride",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cost\": 25,\n  \"duration\": 10,\n  \"date\": \"2023-09-17T14:30:00\",\n  \"driverId\": 2,\n  \"passengerIds\": [1]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/taxi-rides"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete passenger from taxi ride",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cost\": 30.00,\n  \"duration\": 20,\n  \"date\": \"2023-09-17T14:30:00\",\n  \"driverId\": 4,\n  \"passengerIds\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/taxi-rides/1/passengers/2"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete taxi ride",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cost\": 30.00,\n  \"duration\": 20,\n  \"date\": \"2023-09-17T14:30:00\",\n  \"driverId\": 4,\n  \"passengerIds\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/taxi-rides/3"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit taxi ride",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cost\": 2.00,\n  \"duration\": 20,\n  \"date\": \"2023-09-17T14:30:00\",\n  \"driverId\": 3,\n  \"passengerIds\": [4]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8080/api/taxi-rides/1"
+			},
+			"response": []
+		},
+		{
+			"name": "List taxi rides",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cost\": 40.00,\n  \"duration\": 20,\n  \"date\": \"2023-09-17T14:30:00\",\n  \"driverId\": 1,\n  \"passengerIds\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/taxi-rides?driverId=3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"taxi-rides"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2023-10-25T00:00:00",
+							"disabled": true
+						},
+						{
+							"key": "endDate",
+							"value": "2025-01-01T00:00:00",
+							"disabled": true
+						},
+						{
+							"key": "minCost",
+							"value": "30",
+							"disabled": true
+						},
+						{
+							"key": "maxCost",
+							"value": "25",
+							"disabled": true
+						},
+						{
+							"key": "minDuration",
+							"value": "5",
+							"disabled": true
+						},
+						{
+							"key": "maxDuration",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "driverId",
+							"value": "3"
+						},
+						{
+							"key": "passengerId",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "passengerAge",
+							"value": "18",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Driver earning",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"cost\": 40.00,\n  \"duration\": 20,\n  \"date\": \"2023-09-17T14:30:00\",\n  \"driverId\": 1,\n  \"passengerIds\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/earnings-report?endDate=2030-01-01T00:00:00&startDate=2020-01-01T00:00:00",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"earnings-report"
+					],
+					"query": [
+						{
+							"key": "endDate",
+							"value": "2030-01-01T00:00:00"
+						},
+						{
+							"key": "startDate",
+							"value": "2020-01-01T00:00:00"
+						},
+						{
+							"key": "driverId",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
